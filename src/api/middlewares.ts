@@ -11,7 +11,7 @@ import cors from "cors";
 export default defineMiddlewares({
 	routes: [
 		{
-			matcher: "/hello-world",
+			matcher: "*",
 			middlewares: [
 				(
 					req: MedusaRequest,
