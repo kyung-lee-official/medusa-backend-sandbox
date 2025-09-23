@@ -1,5 +1,8 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
-import { MedusaError } from "@medusajs/framework/utils";
+import {
+	ContainerRegistrationKeys,
+	MedusaError,
+} from "@medusajs/framework/utils";
 import { testerSchema } from "./validation-schemas";
 import { CreateTester } from "../../modules/tester/types";
 import { createTesterWorkflow } from "../../workflows/tester/create-tester";
@@ -18,4 +21,15 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 	});
 
 	return res.status(200).json({ tester });
+}
+
+export async function GET(req: MedusaRequest, res: MedusaResponse) {
+	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+
+	const { data } = await query.graph({
+		entity: "tester",
+		fields: ["id", "first_name", "last_name", "email"],
+	});
+
+	return res.status(200).json(data);
 }
