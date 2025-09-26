@@ -1,8 +1,5 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
-import {
-	ContainerRegistrationKeys,
-	MedusaError,
-} from "@medusajs/framework/utils";
+import { MedusaError } from "@medusajs/framework/utils";
 import { testerSchema } from "./validation-schemas";
 import { CreateTester } from "../../modules/tester/types";
 import { createTesterWorkflow } from "../../workflows/tester/create-tester";
