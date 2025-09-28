@@ -38,6 +38,9 @@ module.exports = defineConfig({
 			},
 		},
 		{
+			resolve: "@medusajs/medusa/event-bus-local",
+		},
+		{
 			resolve: "./src/modules/tester",
 		},
 	],
