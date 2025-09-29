@@ -9,14 +9,17 @@ import {
 } from "@medusajs/framework/types";
 import { CreateEmailOptions, Resend } from "resend";
 import { orderPlacedEmail } from "./emails/order-placed";
+import { userInvitedEmail } from "./emails/user-invited";
 
 enum Templates {
 	ORDER_PLACED = "order-placed",
+	USER_INVITED = "user-invited",
 }
 
 const templates: { [key in Templates]?: (props: unknown) => React.ReactNode } =
 	{
 		[Templates.ORDER_PLACED]: orderPlacedEmail,
+		[Templates.USER_INVITED]: userInvitedEmail,
 	};
 
 type ResendOptions = {
@@ -83,6 +86,8 @@ class ResendNotificationProviderService extends AbstractNotificationProviderServ
 		switch (template) {
 			case Templates.ORDER_PLACED:
 				return "Order Confirmation";
+			case Templates.USER_INVITED:
+				return "You've been invited to join our platform";
 			default:
 				return "New Email";
 		}
