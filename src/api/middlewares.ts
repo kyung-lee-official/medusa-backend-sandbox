@@ -33,6 +33,15 @@ export default defineMiddlewares({
 		},
 		{
 			method: ["POST"],
+			matcher: "/commerce-modules/customer/create-customer",
+			middlewares: [
+				authenticate("customer", ["bearer"], {
+					allowUnregistered: true,
+				}),
+			],
+		},
+		{
+			method: ["POST"],
 			matcher: "/commerce-modules/user/create-user",
 			middlewares: [
 				authenticate("user", ["bearer"], {
