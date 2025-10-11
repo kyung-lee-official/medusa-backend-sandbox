@@ -2,9 +2,12 @@ import type {
 	AuthenticatedMedusaRequest,
 	MedusaResponse,
 } from "@medusajs/framework/http";
-import { MedusaError } from "@medusajs/framework/utils";
+import { MedusaError, Modules } from "@medusajs/framework/utils";
 import { createSchema } from "./validation-schemas";
-import { createCustomerAccountWorkflow } from "@medusajs/medusa/core-flows";
+import {
+	createCartWorkflow,
+	createCustomerAccountWorkflow,
+} from "@medusajs/medusa/core-flows";
 
 export async function POST(
 	req: AuthenticatedMedusaRequest,
@@ -29,6 +32,27 @@ export async function POST(
 				first_name: first_name,
 				last_name: last_name,
 			},
+		},
+	});
+	const regionModuleService = req.scope.resolve(Modules.REGION);
+	const found = await regionModuleService.listRegions({
+		name: "United States",
+	});
+	if (!found.length) {
+		throw new MedusaError(
+			MedusaError.Types.NOT_FOUND,
+			"Region with the given name does not exist"
+		);
+	}
+	const defaultRegion = found[0];
+
+	/* create a default cart for the customer */
+	await createCartWorkflow(req.scope).run({
+		input: {
+			customer_id: result.id,
+			email: email,
+			region_id: defaultRegion.id,
+			currency_code: defaultRegion.currency_code,
 		},
 	});
 	res.send(result);

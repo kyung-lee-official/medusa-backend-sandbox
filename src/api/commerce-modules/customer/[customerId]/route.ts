@@ -10,6 +10,8 @@ export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
 
 	const customerModuleService = req.scope.resolve(Modules.CUSTOMER);
 	const authModuleService = req.scope.resolve(Modules.AUTH);
+	const cartModuleService = req.scope.resolve(Modules.CART);
+
 	const customer = await customerModuleService.retrieveCustomer(customerId);
 	if (!customer) {
 		throw new MedusaError(
@@ -31,7 +33,17 @@ export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
 	await authModuleService.deleteAuthIdentities([
 		providerIdentity[0].auth_identity_id!,
 	]);
+	/* this marks the customer as deleted in the DB, but does not remove the record */
+	// await deleteCustomersWorkflow(req.scope).run({
+	// 	input: {
+	// 		ids: [customerId],
+	// 	},
+	// });
 	await customerModuleService.deleteCustomers([customerId]);
+	const carts = await cartModuleService.listCarts({
+		customer_id: customerId,
+	});
+	await cartModuleService.deleteCarts(carts.map((cart) => cart.id));
 
 	return res.status(204).send();
 }
