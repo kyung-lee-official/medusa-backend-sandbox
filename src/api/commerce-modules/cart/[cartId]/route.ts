@@ -4,6 +4,7 @@ import { MedusaError, Modules } from "@medusajs/framework/utils";
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	const cartModuleService = req.scope.resolve(Modules.CART);
 	const regionModuleService = req.scope.resolve(Modules.REGION);
+	const salesChannelModuleService = req.scope.resolve(Modules.SALES_CHANNEL);
 
 	const { cartId } = req.params;
 	const cart = await cartModuleService.retrieveCart(cartId);
@@ -17,11 +18,19 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 		? await regionModuleService.retrieveRegion(cart.region_id)
 		: null;
 
+	/* get cart sales channel (if any) */
+	const salesChannel = cart.sales_channel_id
+		? await salesChannelModuleService.retrieveSalesChannel(
+				cart.sales_channel_id
+			)
+		: null;
+
 	/* add region name to each cart */
-	const cartWithRegionName = {
+	const cartWithDetails = {
 		...cart,
 		region_name: region ? region.name : null,
+		sales_channel_name: salesChannel ? salesChannel.name : null,
 	};
 
-	return res.status(200).json(cartWithRegionName);
+	return res.status(200).json(cartWithDetails);
 }
