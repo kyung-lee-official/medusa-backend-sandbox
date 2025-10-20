@@ -5,20 +5,20 @@ import {
 } from "@medusajs/framework/utils";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-	const { stockLocationId } = req.params;
-	if (!stockLocationId) {
+	const { salesChannelId } = req.params;
+	if (!salesChannelId) {
 		throw new MedusaError(
 			MedusaError.Types.INVALID_DATA,
-			"Missing stock location ID"
+			"Missing sales channel ID"
 		);
 	}
 
 	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
-	const { data: stockLocations } = await query.graph({
-		entity: "stock_location",
-		fields: ["*", "sales_channels.*"],
-		filters: { id: stockLocationId },
+	const { data: salesChannels } = await query.graph({
+		entity: "sales_channel",
+		fields: ["stock_locations.*"],
+		filters: { id: salesChannelId },
 	});
 
-	return res.status(200).json(stockLocations[0]);
+	return res.status(200).json(salesChannels[0].stock_locations);
 }
