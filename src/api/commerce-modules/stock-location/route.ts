@@ -5,7 +5,7 @@ import { createStockLocationsWorkflow } from "@medusajs/medusa/core-flows";
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	const stockLocationService = req.scope.resolve(Modules.STOCK_LOCATION);
 	const data = await stockLocationService.listStockLocations({
-		name: "USA Warehouse",
+		// name: "USA Warehouse",
 	});
 	if (!data) {
 		throw new MedusaError(
