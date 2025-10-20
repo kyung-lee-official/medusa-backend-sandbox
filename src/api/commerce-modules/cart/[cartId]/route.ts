@@ -1,5 +1,6 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import { MedusaError, Modules } from "@medusajs/framework/utils";
+import { addToCartWorkflow } from "@medusajs/medusa/core-flows";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	const cartModuleService = req.scope.resolve(Modules.CART);
@@ -33,4 +34,27 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	};
 
 	return res.status(200).json(cartWithDetails);
+}
+
+export async function PUT(req: MedusaRequest, res: MedusaResponse) {
+	const { cartId } = req.params;
+	const { items } = req.body as any;
+	const cartModuleService = req.scope.resolve(Modules.CART);
+
+	if (!cartId) {
+		return res.status(400).json({ error: "Missing cart ID" });
+	}
+	const cart = await cartModuleService.retrieveCart(cartId);
+	if (!cart) {
+		throw new MedusaError(MedusaError.Types.NOT_FOUND, "Cart not found");
+	}
+
+	const { result } = await addToCartWorkflow(req.scope).run({
+		input: {
+			cart_id: cartId,
+			items: items,
+		},
+	});
+
+	return res.status(200).json(result);
 }
