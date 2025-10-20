@@ -1,6 +1,34 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
-import { MedusaError, Modules } from "@medusajs/framework/utils";
+import {
+	ContainerRegistrationKeys,
+	MedusaError,
+	Modules,
+} from "@medusajs/framework/utils";
 import { deleteProductsWorkflow } from "@medusajs/medusa/core-flows";
+
+export async function GET(req: MedusaRequest, res: MedusaResponse) {
+	const { productId } = req.params;
+	if (!productId) {
+		throw new MedusaError(
+			MedusaError.Types.INVALID_DATA,
+			"Missing product ID"
+		);
+	}
+
+	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+	const { data } = await query.graph({
+		entity: "product",
+		fields: ["*", "variants.*", "variants.prices.*"],
+		filters: {
+			id: productId,
+		},
+	});
+
+	if (!data) {
+		throw new MedusaError(MedusaError.Types.NOT_FOUND, "No products found");
+	}
+	return res.status(200).json(data[0]);
+}
 
 export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
 	const { productId } = req.params;

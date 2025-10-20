@@ -1,6 +1,10 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
 import { CreateProductWorkflowInputDTO } from "@medusajs/framework/types";
-import { MedusaError, Modules } from "@medusajs/framework/utils";
+import {
+	ContainerRegistrationKeys,
+	MedusaError,
+	Modules,
+} from "@medusajs/framework/utils";
 import { createProductsWorkflow } from "@medusajs/medusa/core-flows";
 
 export async function POST(req: MedusaRequest, res: MedusaResponse) {
@@ -13,8 +17,18 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 }
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-	const productModuleService = req.scope.resolve(Modules.PRODUCT);
-	const data = await productModuleService.listProducts();
+	// const productModuleService = req.scope.resolve(Modules.PRODUCT);
+	// const data = await productModuleService.listProducts();
+
+	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+
+	const { data } = await query.graph({
+		entity: "product",
+		fields: ["*", "variants.*", "variants.prices.*"],
+		filters: {
+			// your filters here
+		},
+	});
 
 	if (!data) {
 		throw new MedusaError(MedusaError.Types.NOT_FOUND, "No products found");
