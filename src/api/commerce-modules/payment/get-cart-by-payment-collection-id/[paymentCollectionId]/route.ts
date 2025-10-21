@@ -16,7 +16,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 	const { data: paymentCollections } = await query.graph({
 		entity: "payment_collection",
-		fields: ["cart.*"],
+		fields: ["cart.*", "cart.region.*"],
 		filters: {
 			id: paymentCollectionId,
 		},
