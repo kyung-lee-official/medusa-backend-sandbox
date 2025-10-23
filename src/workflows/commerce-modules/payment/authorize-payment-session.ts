@@ -6,6 +6,7 @@ import { authorizePaymentSessionStep } from "@medusajs/medusa/core-flows";
 
 type WorkflowInput = {
 	id: string;
+	context?: Record<string, any>;
 };
 
 export const authorizePaymentSessionsWorkflow = createWorkflow(
@@ -13,7 +14,7 @@ export const authorizePaymentSessionsWorkflow = createWorkflow(
 	function (input: WorkflowInput) {
 		const data = authorizePaymentSessionStep({
 			id: input.id,
-			context: {},
+			context: input.context,
 		});
 		return new WorkflowResponse(data);
 	}
