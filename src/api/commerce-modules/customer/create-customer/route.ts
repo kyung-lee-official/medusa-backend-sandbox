@@ -46,7 +46,13 @@ export async function POST(
 	}
 	const defaultRegion = found[0];
 
-	/* create a default cart for the customer */
+	/**
+	 * create a default cart for the customer
+	 *
+	 * Note: cart is not reusable after an order is created from it.
+	 * That being said, a customer doesn't necessarily need a cart,
+	 * you can create it whenever it's needed.
+	 */
 	await createCartWorkflow(req.scope).run({
 		input: {
 			customer_id: result.id,
