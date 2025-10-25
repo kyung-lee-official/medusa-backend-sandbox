@@ -24,8 +24,6 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 		fields: [
 			"*",
 			"items.*",
-			// "items.*",
-			// "items.prices.*",
 			"customer.*",
 			"region.*",
 		],
