@@ -16,30 +16,31 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 	/* Use Cart Module Service with database-level filtering approach */
 	const cartModuleService = req.scope.resolve(Modules.CART);
-	let carts: any[] = [];
 
-	/* Try to use more efficient approach - query only active carts */
-	try {
-		/* Method 1: Try direct cart service filtering (if supported) */
-		const allCarts = await cartModuleService.listCarts({
+	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+
+	const { data: carts } = await query.graph({
+		entity: "cart",
+		fields: [
+			"*",
+			"items.*",
+			// "items.*",
+			// "items.prices.*",
+			"customer.*",
+			"region.*",
+		],
+		filters: {
 			customer_id: customer_id as string,
 			region_id: region_id as string,
-		});
+			completed_at: null,
+		},
+	});
 
-		/* For now, filter in memory but add TODO for optimization */
-		carts = allCarts.filter((cart) => !cart.completed_at);
-
-		/* TODO: Replace with database-level filtering when Medusa v2 API supports it:
-		 * - Use proper query builder with WHERE completed_at IS NULL
-		 * - Or use cart service with status filter if available
-		 * - This will improve performance significantly for high-volume stores
-		 */
-	} catch (error) {
-		throw new MedusaError(
-			MedusaError.Types.DB_ERROR,
-			`Failed to fetch carts: ${error.message}`
-		);
-	}
+	/* TODO: Replace with database-level filtering when Medusa v2 API supports it:
+	 * - Use proper query builder with WHERE completed_at IS NULL
+	 * - Or use cart service with status filter if available
+	 * - This will improve performance significantly for high-volume stores
+	 */
 
 	if (carts.length > 1) {
 		throw new MedusaError(
