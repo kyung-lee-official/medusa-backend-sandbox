@@ -58,3 +58,21 @@ export async function PUT(req: MedusaRequest, res: MedusaResponse) {
 
 	return res.status(200).json(result);
 }
+
+export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
+	const { cartId } = req.params;
+	const cartModuleService = req.scope.resolve(Modules.CART);
+
+	if (!cartId) {
+		return res.status(400).json({ error: "Missing cart ID" });
+	}
+
+	const cart = await cartModuleService.retrieveCart(cartId);
+	if (!cart) {
+		throw new MedusaError(MedusaError.Types.NOT_FOUND, "Cart not found");
+	}
+
+	await cartModuleService.deleteCarts(cartId);
+
+	return res.status(204).send();
+}

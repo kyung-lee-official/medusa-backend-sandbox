@@ -6,7 +6,7 @@ import {
 } from "@medusajs/framework/utils";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-	const { customer_id, region_id } = req.query;
+	const { customer_id, sales_channel_id, region_id } = req.query;
 	if (!customer_id || !region_id) {
 		throw new MedusaError(
 			MedusaError.Types.INVALID_DATA,
@@ -21,9 +21,10 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 	const { data: carts } = await query.graph({
 		entity: "cart",
-		fields: ["*", "items.*", "customer.*", "region.*"],
+		fields: ["*", "items.*", "customer.*", "sales_channel.*", "region.*"],
 		filters: {
 			customer_id: customer_id as string,
+			sales_channel_id: sales_channel_id as string,
 			region_id: region_id as string,
 			/* Filter for active carts only */
 			completed_at: null,
@@ -56,6 +57,20 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 			);
 		}
 
+		const salesChannelModuleService = req.scope.resolve(
+			Modules.SALES_CHANNEL
+		);
+		const salesChannel =
+			await salesChannelModuleService.retrieveSalesChannel(
+				sales_channel_id as string
+			);
+		if (!salesChannel) {
+			throw new MedusaError(
+				MedusaError.Types.NOT_FOUND,
+				`Sales Channel with id ${sales_channel_id} not found`
+			);
+		}
+
 		const regionModuleService = req.scope.resolve(Modules.REGION);
 		const region = await regionModuleService.retrieveRegion(
 			region_id as string
@@ -69,8 +84,9 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 		const cart = await cartModuleService.createCarts({
 			currency_code: region.currency_code,
-			customer_id: customer_id as string,
 			email: customer.email,
+			customer_id: customer_id as string,
+			sales_channel_id: sales_channel_id as string,
 			region_id: region_id as string,
 		});
 		return res.status(200).json(cart);
