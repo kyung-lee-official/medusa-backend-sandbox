@@ -21,15 +21,11 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 	const { data: carts } = await query.graph({
 		entity: "cart",
-		fields: [
-			"*",
-			"items.*",
-			"customer.*",
-			"region.*",
-		],
+		fields: ["*", "items.*", "customer.*", "region.*"],
 		filters: {
 			customer_id: customer_id as string,
 			region_id: region_id as string,
+			/* Filter for active carts only */
 			completed_at: null,
 		},
 	});
