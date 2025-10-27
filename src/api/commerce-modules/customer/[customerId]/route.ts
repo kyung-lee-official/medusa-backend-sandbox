@@ -1,6 +1,17 @@
 import { MedusaRequest, MedusaResponse } from "@medusajs/framework";
 import { MedusaError, Modules } from "@medusajs/framework/utils";
 
+export async function GET(req: MedusaRequest, res: MedusaResponse) {
+	const { customerId } = req.params;
+
+	const customerModuleService = req.scope.resolve(Modules.CUSTOMER);
+	const customer = await customerModuleService.retrieveCustomer(customerId, {
+		relations: ["addresses"],
+	});
+
+	return res.status(200).json(customer);
+}
+
 export async function DELETE(req: MedusaRequest, res: MedusaResponse) {
 	const { customerId } = req.params;
 
