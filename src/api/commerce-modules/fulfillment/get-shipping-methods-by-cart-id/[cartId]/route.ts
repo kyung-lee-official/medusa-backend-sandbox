@@ -19,5 +19,5 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 		},
 	});
 
-	res.send({ result });
+	res.send(result);
 }
