@@ -11,7 +11,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 		);
 	}
 
-	const shippingOptions = await listShippingOptionsForCartWithPricingWorkflow(
+	const { result } = await listShippingOptionsForCartWithPricingWorkflow(
 		req.scope
 	).run({
 		input: {
@@ -19,5 +19,5 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 		},
 	});
 
-	res.send(shippingOptions);
+	res.send({ result });
 }
