@@ -8,7 +8,9 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	const salesChannelModuleService = req.scope.resolve(Modules.SALES_CHANNEL);
 
 	const { cartId } = req.params;
-	const cart = await cartModuleService.retrieveCart(cartId);
+	const cart = await cartModuleService.retrieveCart(cartId, {
+		relations: ["shipping_address"],
+	});
 
 	if (!cart) {
 		throw new MedusaError(MedusaError.Types.NOT_FOUND, "Cart not found");
