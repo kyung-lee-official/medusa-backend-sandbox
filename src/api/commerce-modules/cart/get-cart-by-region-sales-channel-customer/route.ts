@@ -21,7 +21,15 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 	const { data: carts } = await query.graph({
 		entity: "cart",
-		fields: ["*", "items.*", "customer.*", "sales_channel.*", "region.*"],
+		fields: [
+			"*",
+			"items.*",
+			"region.*",
+			"customer.*",
+			"sales_channel.*",
+			"shipping_address.*",
+			"shipping_methods.*",
+		],
 		filters: {
 			customer_id: customer_id as string,
 			sales_channel_id: sales_channel_id as string,
