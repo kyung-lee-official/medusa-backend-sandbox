@@ -87,3 +87,35 @@ Emphasis on Order:
 - Cart must be completed before fulfillment because fulfillment is based on a confirmed order.
 
 If you need code examples or more details for any step, let me know!
+
+# Differences Between cart.shipping_methods and fulfillment.shipping_options (Medusa.js Official AI )
+
+Shipping options and shipping methods are not the same thing in Medusa - they are related but distinct concepts.
+
+A shipping option is a way of shipping an item offered by a fulfillment provider. According to the [shipping option documentation](https://docs.medusajs.com/resources/commerce-modules/fulfillment/shipping-option), it represents the available shipping choices (like express or standard shipping) that a fulfillment provider offers.
+
+Shipping options are:
+
+- Configured in advance by merchants
+
+- Associated with fulfillment providers
+
+- Restricted by service zones and custom rules
+
+- Available for customers to choose from during checkout
+
+A shipping method is created from a shipping option when a customer makes their selection during checkout. As explained in the [cart concepts guide](https://docs.medusajs.com/resources/commerce-modules/cart/concepts#shipping-methods), a shipping method is used to fulfill the items in the cart after the order is placed.
+
+The relationship is described in the [cart-fulfillment link documentation](https://docs.medusajs.com/resources/commerce-modules/cart/links-to-other-modules#fulfillment-module):
+
+"In the Medusa application, the shipping method is created from a shipping option, available through the Fulfillment Module. Its ID is stored in the `shipping_option_id` property of the method."
+
+1. Shipping options are retrieved for a cart using the [List Shipping Options API](https://docs.medusajs.com/api/store#shipping-options_getshippingoptions)
+
+1. Customer selects their preferred shipping option
+
+1. A shipping method is created and attached to the cart using the [Add Shipping Method API](https://docs.medusajs.com/api/store#carts_postcartsidshippingmethods)
+
+1. The shipping method is then used for fulfillment after order placement
+
+Think of it this way: shipping options are the **available choices**, while shipping methods are the **selected choice** attached to a specific cart or order.
