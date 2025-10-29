@@ -11,6 +11,8 @@ module.exports = defineConfig({
 			authCors: process.env.AUTH_CORS!,
 			jwtSecret: process.env.JWT_SECRET || "supersecret",
 			cookieSecret: process.env.COOKIE_SECRET || "supersecret",
+			/* set your desired duration here, e.g., "1h", "7d" */
+			jwtExpiresIn: process.env.JWT_EXPIRES_IN || "1d",
 		},
 	},
 	modules: [
