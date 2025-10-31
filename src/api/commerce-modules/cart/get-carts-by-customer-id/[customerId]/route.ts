@@ -41,5 +41,10 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 		region_name: cart.region_id ? regionMap[cart.region_id]?.name : null,
 	}));
 
-	return res.status(200).json(cartsWithRegionNames);
+	/* non-completed carts only */
+	const nonCompletedCarts = cartsWithRegionNames.filter(
+		(cart) => !cart.completed_at
+	);
+
+	return res.status(200).json(nonCompletedCarts);
 }
