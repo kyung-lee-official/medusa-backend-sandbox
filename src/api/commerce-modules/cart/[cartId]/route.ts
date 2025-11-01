@@ -9,7 +9,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 	const { cartId } = req.params;
 	const cart = await cartModuleService.retrieveCart(cartId, {
-		relations: ["shipping_address"],
+		relations: ["shipping_address", "shipping_methods"],
 	});
 
 	if (!cart) {
