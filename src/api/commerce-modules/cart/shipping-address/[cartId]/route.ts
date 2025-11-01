@@ -27,6 +27,9 @@ export async function POST(req: MedusaRequest, res: MedusaResponse) {
 			city: address.city,
 			country_code: address.country_code,
 			postal_code: address.postal_code,
+			metadata: {
+				customer_address_id: address.id,
+			},
 		},
 	});
 
