@@ -1,16 +1,32 @@
 import type { MedusaRequest, MedusaResponse } from "@medusajs/framework/http";
-import { MedusaError, Modules } from "@medusajs/framework/utils";
+import {
+	ContainerRegistrationKeys,
+	MedusaError,
+	Modules,
+} from "@medusajs/framework/utils";
 import { addToCartWorkflow } from "@medusajs/medusa/core-flows";
 
 export async function GET(req: MedusaRequest, res: MedusaResponse) {
-	const cartModuleService = req.scope.resolve(Modules.CART);
 	const regionModuleService = req.scope.resolve(Modules.REGION);
 	const salesChannelModuleService = req.scope.resolve(Modules.SALES_CHANNEL);
-
 	const { cartId } = req.params;
-	const cart = await cartModuleService.retrieveCart(cartId, {
-		relations: ["shipping_address", "shipping_methods"],
+
+	// const cartModuleService = req.scope.resolve(Modules.CART);
+	// const cart = await cartModuleService.retrieveCart(cartId, {
+	// 	relations: ["shipping_address", "shipping_methods"],
+	// });
+
+	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
+	const { data: carts } = await query.graph({
+		entity: "cart",
+		fields: [
+			"*",
+			"shipping_address.*",
+			"shipping_methods.*",
+			"payment_collection.*",
+		],
 	});
+	const cart = carts.find((c) => c.id === cartId);
 
 	if (!cart) {
 		throw new MedusaError(MedusaError.Types.NOT_FOUND, "Cart not found");
