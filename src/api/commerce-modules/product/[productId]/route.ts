@@ -30,12 +30,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	/* Get product with variants and all prices first */
 	const { data: products } = await query.graph({
 		entity: "product",
-		fields: [
-			"*",
-			"variants.*",
-			"variants.prices.*",
-			"variants.prices.price_set.*",
-		],
+		fields: ["*", "variants.*", "variants.prices.*"],
 		filters: {
 			id: productId,
 		},
