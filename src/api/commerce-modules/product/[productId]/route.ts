@@ -27,6 +27,9 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 
 	const query = req.scope.resolve(ContainerRegistrationKeys.QUERY);
 
+	/**
+	 * TODO: Implement proper matching logic for regionId
+	 */
 	/* Get product with variants and all prices first */
 	const { data: products } = await query.graph({
 		entity: "product",
