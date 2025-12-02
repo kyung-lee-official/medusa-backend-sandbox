@@ -1,31 +1,27 @@
 import {
-	ConfigModule,
+	authenticate,
+	type ConfigModule,
 	defineMiddlewares,
-	MedusaNextFunction,
-	MedusaRequest,
-	MedusaResponse,
+	errorHandler,
+	type MedusaNextFunction,
+	type MedusaRequest,
+	type MedusaResponse,
 } from "@medusajs/framework";
-import { parseCorsOrigins } from "@medusajs/framework/utils";
+import { type MedusaError, parseCorsOrigins } from "@medusajs/framework/utils";
 import cors from "cors";
-import { authenticate } from "@medusajs/framework";
+
+const originalErrorHandler = errorHandler();
 
 export default defineMiddlewares({
 	routes: [
 		{
 			matcher: "*",
 			middlewares: [
-				(
-					req: MedusaRequest,
-					res: MedusaResponse,
-					next: MedusaNextFunction
-				) => {
-					const configModule: ConfigModule =
-						req.scope.resolve("configModule");
+				(req: MedusaRequest, res: MedusaResponse, next: MedusaNextFunction) => {
+					const configModule: ConfigModule = req.scope.resolve("configModule");
 
 					return cors({
-						origin: parseCorsOrigins(
-							configModule.projectConfig.http.storeCors
-						),
+						origin: parseCorsOrigins(configModule.projectConfig.http.storeCors),
 						credentials: true,
 					})(req, res, next);
 				},
@@ -59,4 +55,12 @@ export default defineMiddlewares({
 			],
 		},
 	],
+	errorHandler: (
+		error: MedusaError | any,
+		req: MedusaRequest,
+		res: MedusaResponse,
+		next: MedusaNextFunction,
+	) => {
+		return originalErrorHandler(error, req, res, next);
+	},
 });
