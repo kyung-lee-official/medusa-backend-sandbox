@@ -67,6 +67,7 @@ export default defineMiddlewares({
 				code: error.code || "SYSTEM_INTERNAL_ERROR",
 				message: error.message || "",
 				details: error.details || {},
+				timestamp: error.timestamp || new Date().toISOString(),
 			},
 		});
 		return;

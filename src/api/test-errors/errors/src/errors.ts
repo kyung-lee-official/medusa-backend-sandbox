@@ -17,6 +17,7 @@ export const ApiErrorResponseSchema = z.object({
 		code: ErrorCodeSchema,
 		message: z.string().optional(),
 		details: z.any().optional(),
+		timestamp: z.string(),
 	}),
 });
 export type ApiErrorResponse = z.infer<typeof ApiErrorResponseSchema>;

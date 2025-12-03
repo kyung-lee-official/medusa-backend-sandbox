@@ -9,6 +9,7 @@ export class HttpError extends Error {
 	public readonly status: number;
 	public readonly code: ErrorCode;
 	public readonly details?: Record<string, any>;
+	public readonly timestamp: string;
 
 	constructor(
 		code: ErrorCode,
@@ -20,6 +21,7 @@ export class HttpError extends Error {
 		this.code = code;
 		this.details = details;
 		this.status = ERROR_CODE_TO_STATUS[code] ?? 500;
+		this.timestamp = new Date().toISOString();
 
 		// For better stack traces in Node.js
 		if (Error.captureStackTrace) {
@@ -34,6 +36,7 @@ export class HttpError extends Error {
 				code: this.code,
 				message: this.message !== this.code ? this.message : undefined,
 				details: this.details,
+				timestamp: this.timestamp,
 			},
 		};
 	}
