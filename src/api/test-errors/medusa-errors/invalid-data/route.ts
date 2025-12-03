@@ -3,8 +3,8 @@ import { ErrorCodeSchema } from "../../schema";
 
 export async function GET() {
 	throw new MedusaError(
-		MedusaError.Types.DUPLICATE_ERROR,
-		"email already exists",
-		ErrorCodeSchema.enum.DUPLICATE_ERROR_EMAIL_EXISTS,
+		MedusaError.Types.INVALID_DATA,
+		"invalid email",
+		ErrorCodeSchema.enum.INVALID_DATA_INVALID_EMAIL,
 	);
 }

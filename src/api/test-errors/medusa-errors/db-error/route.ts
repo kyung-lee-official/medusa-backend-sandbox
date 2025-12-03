@@ -4,6 +4,7 @@ import { ErrorCodeSchema } from "../../schema";
 export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.DB_ERROR,
-		ErrorCodeSchema.Enum.DB_ERROR_UNKNOWN_DB_ERROR,
+		"unknown database error",
+		ErrorCodeSchema.enum.DB_ERROR_UNKNOWN_DB_ERROR,
 	);
 }

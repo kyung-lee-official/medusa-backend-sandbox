@@ -3,7 +3,8 @@ import { ErrorCodeSchema } from "../../schema";
 
 export async function GET() {
 	throw new MedusaError(
-		MedusaError.Types.NOT_FOUND,
-		ErrorCodeSchema.Enum.NOT_FOUND_CUSTOMER_NOT_FOUND,
+		MedusaError.Types.UNEXPECTED_STATE,
+		"unexpected state encountered",
+		ErrorCodeSchema.enum.UNEXPECTED_STATE,
 	);
 }
