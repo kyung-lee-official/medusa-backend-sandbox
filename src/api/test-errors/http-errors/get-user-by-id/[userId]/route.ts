@@ -12,7 +12,7 @@ export async function GET(req: MedusaRequest, res: MedusaResponse) {
 	const { userId } = req.params;
 	const user = mockDb.users.find((u) => u.id === Number(userId));
 	if (!user) {
-		throw new HttpError("AUTH.FORBIDDEN", "Permission denied", {
+		throw new HttpError("USER.NOT_FOUND", "User not found", {
 			foo: { userId },
 		});
 	}
