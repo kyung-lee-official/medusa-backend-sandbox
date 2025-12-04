@@ -4,6 +4,12 @@ export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.CONFLICT,
 		"resource conflict occurred",
-		"CONFLICT_RESOURCE_CONFLICT_OCCURRED",
 	);
 }
+
+const returnedError = {
+	code: "invalid_state_error",
+	type: "conflict",
+	message:
+		"The request conflicted with another request. You may retry the request with the provided Idempotency-Key.",
+};

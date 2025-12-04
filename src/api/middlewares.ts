@@ -7,9 +7,10 @@ import {
 	type MedusaRequest,
 	type MedusaResponse,
 } from "@medusajs/framework";
-import { parseCorsOrigins } from "@medusajs/framework/utils";
+import { MedusaError, parseCorsOrigins } from "@medusajs/framework/utils";
 import cors from "cors";
 import type { HttpError } from "./test-errors/errors/src";
+import { MedusaErrorTypes } from "./test-errors/medusa-errors/medusa-error-types";
 
 const originalErrorHandler = errorHandler();
 
@@ -57,11 +58,24 @@ export default defineMiddlewares({
 		},
 	],
 	errorHandler: (
-		error: HttpError,
+		error: HttpError | MedusaError,
 		req: MedusaRequest,
 		res: MedusaResponse,
 		next: MedusaNextFunction,
 	) => {
+		if (MedusaError.isMedusaError(error)) {
+			const medusaError = error as MedusaError;
+			const map = MedusaErrorTypes[medusaError.type];
+			res.status(Object.values(map)[0]).json({
+				error: {
+					code: Object.keys(map)[0],
+					message: medusaError.message,
+					details: {},
+					timestamp: new Date().toISOString(),
+				},
+			});
+			return;
+		}
 		res.status(error.status || 500).json({
 			error: {
 				code: error.code || "SYSTEM_INTERNAL_ERROR",

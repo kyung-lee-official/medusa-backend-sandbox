@@ -4,6 +4,10 @@ export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.UNEXPECTED_STATE,
 		"unexpected state encountered",
-		"UNEXPECTED_STATE",
 	);
 }
+
+const returnedError = {
+	type: "unexpected_state",
+	message: "unexpected state encountered",
+};

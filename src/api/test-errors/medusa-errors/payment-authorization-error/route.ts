@@ -4,6 +4,10 @@ export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.PAYMENT_AUTHORIZATION_ERROR,
 		"payment authorization failed",
-		"PAYMENT_AUTHORIZATION_ERROR_PAYMENT_AUTHORIZATION_FAILED",
 	);
 }
+
+const returnedError = {
+	type: "payment_authorization_error",
+	message: "payment authorization failed",
+};

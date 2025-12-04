@@ -4,6 +4,11 @@ export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.DUPLICATE_ERROR,
 		"email already exists",
-		"DUPLICATE_ERROR_EMAIL_EXISTS",
 	);
 }
+
+const returnedError = {
+	code: "invalid_request_error",
+	type: "duplicate_error",
+	message: "email already exists",
+};

@@ -4,6 +4,10 @@ export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.UNAUTHORIZED,
 		"sign in required to delete user",
-		"UNAUTHORIZED_CANNOT_DELETE_USER",
 	);
 }
+
+const returnedError = {
+	type: "unauthorized",
+	message: "sign in required to delete user",
+};

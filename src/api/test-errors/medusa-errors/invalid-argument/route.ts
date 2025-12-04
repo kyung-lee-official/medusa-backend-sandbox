@@ -4,6 +4,10 @@ export async function GET() {
 	throw new MedusaError(
 		MedusaError.Types.INVALID_ARGUMENT,
 		"invalid data provided",
-		"INVALID_ARGUMENT_INVALID_DATA",
 	);
 }
+
+const returnedError = {
+	type: "invalid_argument",
+	message: "invalid data provided",
+};
